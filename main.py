@@ -25,6 +25,12 @@ for image_file in image_files:
 
     if found == True:
 
+        # termination criteria
+        term = (cv2.TERM_CRITERIA_MAX_ITER + cv2.TERM_CRITERIA_EPS, 30, 0.001)
+
+        # Improve the corner positions on a sub-pixel level (increases the RMS)
+        cv2.cornerSubPix(im_gray, corners, (5, 5), (-1, -1), term)
+
         im_points.append(corners)
         obj_points.append(objp)
 
@@ -44,7 +50,7 @@ im = cv2.imread('right.jpg')
 newcameramtx, roi = cv2.getOptimalNewCameraMatrix(camera_mtx, dist_coeff, (w, h), 1, (w, h))
 dst = cv2.undistort(im, camera_mtx, dist_coeff, None, newcameramtx)
 
-# crop the image
+# crop the image. ROI are all-good pixels regions in the image
 x,y,w,h = roi
 dst = dst[y:y+h, x:x+w]
 cv2.imshow('img', dst)
