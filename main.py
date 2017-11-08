@@ -35,13 +35,24 @@ for image_file in image_files:
         #cv2.destroyAllWindows()
 
 
-rms, camera_mtx, dist_coeff, rotation, translation = cv2.calibrateCamera(obj_points, im_points, (w,h), None, None)
+rms, camera_mtx, dist_coeff, rotation, translation = cv2.calibrateCamera(obj_points, im_points, (w, h), None, None)
 
 if (rms > 1):
     print('Bad calibration. RMS error: ', rms)
 
+im = cv2.imread('right.jpg')
 newcameramtx, roi = cv2.getOptimalNewCameraMatrix(camera_mtx, dist_coeff, (w, h), 1, (w, h))
 dst = cv2.undistort(im, camera_mtx, dist_coeff, None, newcameramtx)
 
+# crop the image
+x,y,w,h = roi
+dst = dst[y:y+h, x:x+w]
 cv2.imshow('img', dst)
+
+dst = cv2.undistort(im, camera_mtx, dist_coeff)
+
+cv2.imshow('im2', dst)
+
+
 cv2.waitKey(0)
+
