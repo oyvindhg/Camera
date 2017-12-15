@@ -1,10 +1,11 @@
 #conda install -c menpo opencv3
 
-import darknet.python.darknet as dn
 
+import darknet.run_python as dn
 import cv2
 import os
 from calibration import calibrate
+from show_image import show_labeled
 
 resize = 0.3
 main_path = os.getcwd()
@@ -22,14 +23,26 @@ os.chdir(im_path)
 # cv2.imwrite('TEST_c_undist.jpg', dst)
 #cv2.waitKey(0)
 
-im = cv2.imread('GOPR0857.JPG')
+#im = cv2.imread('GOPR0857.JPG')
 os.chdir(main_path)
+
+
+im = cv2.imread('horses.jpg')
+
+net_path = main_path + '/darknet'
+os.chdir(net_path)
 
 config = b"cfg/yolo.cfg"
 weights = b"yolo.weights"
 metadata = b"cfg/coco.data"
 
-net = dn.load_net(config, weights, 0)
-meta = dn.load_meta(metadata)
 
-r = dn.detect(net, meta, im)
+# dn.init(net_path)
+# net = dn.load_net(config, weights, 0)
+# meta = dn.load_meta(metadata)
+# boxes = dn.detection2(net, meta, im)
+# print(boxes)
+
+boxes = [(b'bicycle', 0.8509225845336914, (341.80010986328125, 285.9195861816406, 493.32745361328125, 324.6991882324219))]
+
+show_labeled(im, boxes)
