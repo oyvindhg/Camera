@@ -41,12 +41,12 @@ def calibrate(resize):
             im_points.append(corners)
             obj_points.append(objp)
 
-            if image_file == "GOPR0857.JPG":
-                # Draw and display the corners
-                cv2.drawChessboardCorners(im, board_size, corners, found)
-                cv2.imwrite('TEST_c_orig.jpg', im)
-                cv2.imshow('img', im)
-                cv2.waitKey(0)
-                cv2.destroyAllWindows()
+            # if image_file == "GOPR0857.JPG":
+            #     # Draw and display the corners
+            #     cv2.drawChessboardCorners(im, board_size, corners, found)
+            #     cv2.imwrite('TEST_c_orig.jpg', im)
+            #     cv2.imshow('img', im)
+            #     cv2.waitKey(0)
+            #     cv2.destroyAllWindows()
 
     return cv2.calibrateCamera(obj_points, im_points, (w, h), None, None)
