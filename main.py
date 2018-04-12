@@ -19,6 +19,8 @@ if (rms > 1):
 os.chdir(main_path)
 
 im = cv2.imread('Test_images/GOPR0943.JPG')
+
+
 im = cv2.resize(im, None, fx=resize, fy=resize, interpolation=cv2.INTER_CUBIC)
 cv2.imshow('orig', im)
 cv2.imwrite('orig.jpg', im)
