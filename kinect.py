@@ -5,6 +5,7 @@ import darknet.run_python as dn
 import os, time
 from show_image import show_labeled
 import cv2
+from create_3D_model import plot_3d
 
 depth_x = 480
 depth_y = 640
@@ -38,18 +39,37 @@ def get_image_and_depth():
 def color_to_depth(image, depth_image):
     return freenect.color_to_depth(image, depth_image)
 
+
 def depth_to_xyz(depth_image):
     return freenect.depth_to_xy(depth_image)
 
 
 a = get_depth()
+im_pre = get_image()
+im = color_to_depth(im_pre, a)
 
-print(a[300][300])
+#
+# print("ok")
+m = depth_to_xyz(a)
+#
+# #print(m)
+#
+# m = np.zeros((2,3,3))
+# # #
+# m[0][1][0] = 5
+# m[1][1][0] = 2.5
+# m[0][0][2] = 5
+# m[0][2][1] = 2.5
+#
 
-p = depth_to_xyz(a)
+plot_3d(m, im)
 
-print(p)
+show_image(im)
 
+cv2.waitKey()
+#
+#
+#
 quit()
 
 cont = True
