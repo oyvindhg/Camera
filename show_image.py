@@ -37,10 +37,11 @@ def show_labeled(im, boxes):
         width = round(box[2][2])
         height = round(box[2][3])
 
+
         if (left < 0): left = 0
-        if (left + width > im.shape[0] - 1): width = im.shape[0] - 1 - left
+        if (left + width > im.shape[1] - 1): width = im.shape[1] - 1 - left
         if (top < 0): top = 0
-        if (top + height > im.shape[1] - 1): height = im.shape[1] - 1 - top
+        if (top + height > im.shape[0] - 1): height = im.shape[0] - 1 - top
 
         # Draw rectangle with class name
         ax.add_patch(

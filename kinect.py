@@ -7,17 +7,15 @@ from show_image import show_labeled
 import cv2
 from create_3D_model import plot_3d
 
-depth_x = 480
-depth_y = 640
 
 DEPTH_REGISTERED   = 4        # processed depth data in mm, aligned to 640x480 RGB
 DEPTH_MM           = 5        # depth to each pixel in mm, but left unaligned to RGB image
 
 # cv2.namedWindow('Depth')        #10 bits: Depth is from 0 to 1023. 11th bit gives 2047 if the IR can't read the pattern from the IR projector
 # cv2.namedWindow('Image')
-print('Press ESC in window to stop')
 
-
+depth_y = 480
+depth_x = 640
 
 def show_depth(depth_image):
     depth_im = frame_convert2.pretty_depth_cv(depth_image)
@@ -32,25 +30,92 @@ def get_depth():
 def get_image():
     return frame_convert2.video_cv(freenect.sync_get_video()[0])
 
-def get_image_and_depth():
-    im, depth = freenect.synch_get_video_and_depth()
-    return frame_convert2.video_cv(im[0]), depth[0]
-
 def color_to_depth(image, depth_image):
     return freenect.color_to_depth(image, depth_image)
 
+def isolate_object(image, depth_image, box):
+    return freenect.isolate_object(image, depth_image, box)
 
 def depth_to_xyz(depth_image):
     return freenect.depth_to_xy(depth_image)
 
+def object_depth(obj_image, depth_image):
 
-a = get_depth()
-im_pre = get_image()
-im = color_to_depth(im_pre, a)
+    depth_copy = np.copy(depth_image)
 
+    print("1")
+
+    for y in range(0,depth_y):
+        for x in range(0,depth_x):
+            if obj_image[y][x][0] == obj_image[y][x][1] == obj_image[y][x][2] == 0:
+                depth_copy[y][x] = 0
+
+    print("2")
+    xyz = depth_to_xyz(depth_copy)
+    print("3")
+    for py in range(0,depth_y):
+        for px in range(0,depth_x):
+            x, y, z = xyz[py][px]
+            if x*x + y*y + z*z > 0.0001:
+                print("py %d, px %d", py, px)
+    print("4")
+
+
+
+
+# im = get_image()
+# d = get_depth()
 #
-# print("ok")
-m = depth_to_xyz(a)
+# show_image(im)
+# show_depth(d)
+# cv2.waitKey()
+
+# np.save("image", im)
+# np.save("depth", d)
+
+im = np.load("image.npy")
+waste = get_depth()
+d = np.load("depth.npy")
+
+depth_to_xyz(d)
+
+quit()
+
+main_path = os.getcwd()
+net_path = main_path + '/darknet'
+os.chdir(net_path)
+
+method = "yolo"
+
+if method == "yolo9000":
+    config = b"cfg/yolo9000.cfg"
+    weights = b"yolo9000.weights"
+    metadata = b"cfg/combine9k.data"
+else:
+    config = b"cfg/yolo.cfg"
+    weights = b"yolo.weights"
+    metadata = b"cfg/coco.data"
+
+dn.init(net_path)
+net = dn.load_net(config, weights, 0)
+meta = dn.load_meta(metadata)
+boxes = dn.detection2(net, meta, im)
+print('boxes:', type(boxes))
+
+show_labeled(im, boxes)
+
+
+for obj in boxes:
+
+    im2 = isolate_object(im, d, obj)
+    show_image(im2)
+    cv2.waitKey()
+
+    object_depth(im2, d)
+
+
+
+#print("ok")
 #
 # #print(m)
 #
@@ -62,11 +127,7 @@ m = depth_to_xyz(a)
 # m[0][2][1] = 2.5
 #
 
-plot_3d(m, im)
 
-show_image(im)
-
-cv2.waitKey()
 #
 #
 #
@@ -87,7 +148,6 @@ while cont:
 
 
 
-    # main_path = os.getcwd()
     # main_path = os.getcwd()
     # net_path = main_path + '/darknet'
     # os.chdir(net_path)
