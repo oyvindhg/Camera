@@ -22,9 +22,12 @@ def reshape_to_3d_arr(xyz_arr):
 
 def scale_to_unit(xyz_arr):
     max_num = float(abs(xyz_arr).max())
+
+
     return xyz_arr / max_num
 
 def plot_3d(xyz_arr, rgb_im, filename = "room.ply"):
+
 
     positions = scale_to_unit(reshape_to_3d_arr(xyz_arr))
 
@@ -41,11 +44,8 @@ def plot_3d(xyz_arr, rgb_im, filename = "room.ply"):
         if positions[i][2] == 0:
             colors[i][:] = setcolor('green')
 
-    print('for',rgb_im)
-
     rgb_3d = reshape_to_3d_arr(rgb_im)
 
-    print('ette',rgb_3d)
 
     for i in range(0, int(positions.size / 3)):
         colors[i][:] = np.array([rgb_3d[i][2], rgb_3d[i][0], rgb_3d[i][1]]).astype(np.uint8)

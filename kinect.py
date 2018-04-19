@@ -39,47 +39,54 @@ def isolate_object(image, depth_image, box):
 def depth_to_xyz(depth_image):
     return freenect.depth_to_xy(depth_image)
 
-def object_depth(obj_image, depth_image):
+def object_depth_cm(obj_image, depth_image):
 
     depth_copy = np.copy(depth_image)
-
-    print("1")
 
     for y in range(0,depth_y):
         for x in range(0,depth_x):
             if obj_image[y][x][0] == obj_image[y][x][1] == obj_image[y][x][2] == 0:
                 depth_copy[y][x] = 0
 
-    print("2")
     xyz = depth_to_xyz(depth_copy)
-    print("3")
+
+    x_tot = 0
+    y_tot = 0
+    z_tot = 0
+    i = 0
     for py in range(0,depth_y):
         for px in range(0,depth_x):
             x, y, z = xyz[py][px]
             if x*x + y*y + z*z > 0.0001:
-                print("py %d, px %d", py, px)
-    print("4")
+                i += 1
+                x_tot += x
+                y_tot += y
+                z_tot += z
+
+    x_avg = x_tot/(i * 10)
+    y_avg = y_tot/(i * 10)
+    z_avg = z_tot/(i * 10)
+
+    return x_avg, y_avg, z_avg
 
 
 
 
-# im = get_image()
-# d = get_depth()
+
+im = get_image()
+d = get_depth()
 #
-# show_image(im)
-# show_depth(d)
-# cv2.waitKey()
+show_image(im)
+show_depth(d)
+cv2.waitKey()
 
 # np.save("image", im)
 # np.save("depth", d)
 
-im = np.load("image.npy")
-waste = get_depth()
-d = np.load("depth.npy")
+# im = np.load("image.npy")
+# waste = get_depth()
+# d = np.load("depth.npy")
 
-depth_to_xyz(d)
-
-quit()
 
 main_path = os.getcwd()
 net_path = main_path + '/darknet'
@@ -99,19 +106,19 @@ else:
 dn.init(net_path)
 net = dn.load_net(config, weights, 0)
 meta = dn.load_meta(metadata)
-boxes = dn.detection2(net, meta, im)
-print('boxes:', type(boxes))
+boxes = dn.detection2(net, meta, im, thresh=0.1)
+
+print(boxes)
 
 show_labeled(im, boxes)
-
-
 for obj in boxes:
 
     im2 = isolate_object(im, d, obj)
     show_image(im2)
     cv2.waitKey()
 
-    object_depth(im2, d)
+    x, y, z = object_depth_cm(im2, d)
+    print("Pos:", x, y, z)
 
 
 

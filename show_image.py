@@ -23,6 +23,10 @@ def int_to_color(number):
 
 
 def show_labeled(im, boxes):
+
+    if not boxes:
+        return
+
     fig, ax = plt.subplots()
     for box in boxes:  # Iterate through the detected objects
 
