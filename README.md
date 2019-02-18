@@ -1,5 +1,5 @@
-#Specialization project - Part 1: Reinforcement Learning methods on OpenAI problems
+# Specialization project - Part 2: Object Detection
 
-**Description:** This is the code that consitutes the first part ofmy report from my specialization project during my penultimate semester of the Cybernetics and Robotics study program.
+**Description:** This is the code that consitutes the second part of my report from my specialization project during my penultimate semester of the Cybernetics and Robotics study program.
 
-**Introduction:** Studies of reinforcement learning methods constitute the first part of my specialization project. Three simulation environments were used for implementation of reinforcement learning methods. The implemented methods spanned from simple tabular methods to more complex deep reinforcement learning methods utilizing artificial neural networks. Most methods studied in theory also worked well in practice, and parameters were tuned in order to improve and investigate each of the methods.
+**Contect:** In order for a robotic manipulator to observe its environment (in my master's thesis), it will be equipped with a camera that will act as its perception module. The second part of this project therefore involved processing of camera images. Firstly, camera calibration was performed in order to remove distortion from the images. Secondly, object detection was performed on these undistorted images.
