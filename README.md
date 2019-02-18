@@ -4,4 +4,4 @@
 
 **Contect:** In order for a robotic manipulator to observe its environment (in my master's thesis), it will be equipped with a camera that will act as its perception module. The second part of this project therefore involved processing of camera images. Firstly, camera calibration was performed in order to remove distortion from the images. Secondly, object detection was performed on these undistorted images.
 
-[Link to part 1](https://github.com/oyvindhg/ReinforcementLearning-OpenAI)
+[Link to Part 1 of the project](https://github.com/oyvindhg/ReinforcementLearning-OpenAI)
